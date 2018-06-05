@@ -50,7 +50,8 @@ lazy val scalaSparkDepsVersion = Map(
     "2.3" -> Map(
       "akka" -> "2.4.17",
       "hadoop" -> "2.6.0-cdh5.13.3",
-      "json4s" -> "3.2.11")))
+      "json4s" -> "3.2.11",
+      "hbase" -> "1.2.0-cdh5.13.3")))
 
 name := "apache-predictionio-parent"
 
@@ -73,13 +74,17 @@ javacOptions in (ThisBuild, compile) ++= Seq("-source", "1.7", "-target", "1.7",
   "-Xlint:deprecation", "-Xlint:unchecked")
 
 // Ignore differentiation of Spark patch levels
-sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", (if (scalaBinaryVersion.value == "2.10") "1.6.3" else "2.1.1"))
+sparkVersion in ThisBuild := sys.props.getOrElse("spark.version", (if (scalaBinaryVersion.value == "2.10") "1.6.3" else "2.3.0.cloudera2"))
 
 sparkBinaryVersion in ThisBuild := binaryVersion(sparkVersion.value)
 
 akkaVersion in ThisBuild := sys.props.getOrElse(
   "akka.version",
   scalaSparkDepsVersion(scalaBinaryVersion.value)(sparkBinaryVersion.value)("akka"))
+
+hbaseVersion in ThisBuild := sys.props.getOrElse(
+  "hbase.version",
+  scalaSparkDepsVersion(scalaBinaryVersion.value)(sparkBinaryVersion.value)("hbase"))
 
 lazy val es = sys.props.getOrElse("elasticsearch.version", "5.5.2")
 
